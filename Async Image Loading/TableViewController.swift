@@ -22,13 +22,18 @@ class TableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             /// - Tag: update
             var content = cell.defaultContentConfiguration()
-            content.image = item.image
+            
+            content.image = item.image            
             ImageCache.publicCache.load(url: item.url as NSURL, item: item) { (fetchedItem, image) in
                 if let img = image, img != fetchedItem.image {
                     var updatedSnapshot = self.dataSource.snapshot()
                     if let datasourceIndex = updatedSnapshot.indexOfItem(fetchedItem) {
                         let item = self.imageObjects[datasourceIndex]
+                        print("about to update the image for the item")
+                        dump(item)
+                        print(String(repeating: "---", count: 20))
                         item.image = img
+                        dump(item)
                         updatedSnapshot.reloadItems([item])
                         self.dataSource.apply(updatedSnapshot, animatingDifferences: true)
                     }
